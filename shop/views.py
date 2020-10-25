@@ -3,4 +3,4 @@ from .models import Seller
 # Create your views here.
 def post_list(request):
     posts = Seller.objects.all()
-    return render(request, 'shop/post_list.html', {'posts': posts})
+    return render(request, 'shop/index.html', {'posts': posts})
