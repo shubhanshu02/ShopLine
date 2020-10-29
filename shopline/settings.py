@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'authentication.apps.AuthenticationConfig',
-    'shop.apps.ShopConfig'
+    'shop.apps.ShopConfig',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,4 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'/media')
 django_heroku.settings(locals())
 LOGIN_REDIRECT_URL='/'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

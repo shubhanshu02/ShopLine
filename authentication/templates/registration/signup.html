@@ -1,14 +1,38 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Sign Up{% endblock %}
+
 
 {% block content %}
-<div class="container">
-  <h2>Sign up</h2>
-  <form method="post">
-    {% csrf_token %}
-    
-    {{ form.as_ul }}
-  
-    <button type="submit">Sign up</button>
-  </form>
+<div class="jumbotron">
+  <div class="container">
+      <div class="row">
+          <div class="col-sm-6 align-self-center text-center">
+              <h1>Register as a Seller</h1>
+              
+          </div>
+
+          <div class="col-sm-6 text-center">
+              <img class="img-fluid" style="max-height: 200px;" src="{% static "login.svg" %}"
+                  alt="My image">
+          </div>
+      </div>
+  </div>
 </div>
+<div class="container">
+  <div class="col-sm-6" style="margin:auto;">
+    <div class="card p-4">
+      <div class="card-title">
+        <h2>Sign up</h2>
+      </div>
+      <form method="post">
+        {% csrf_token %}
+        {{ form |crispy }}
+        <button type="submit" class="btn btn-primary">Sign up</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
