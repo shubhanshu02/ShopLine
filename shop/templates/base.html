@@ -19,13 +19,15 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <a style="padding-left: 20px;font-family: 'Italianno', cursive; font-size: 35px; font-weight: bold;"
-            class="navbar-brand" href="#">ShopLine</a>
+            class="navbar-brand" href="{% url 'index' %}">ShopLine</a>
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                {% url 'index' as url %}
+                <li class="nav-item {% if request.path == url %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
+    
                 <li class="nav-item">
                     <a class="nav-link" href="#">Catelog</a>
                 </li>
@@ -37,8 +39,8 @@
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
-            <button class="ml-2 btn btn-warning">Login</button>
-            <button class="ml-2 btn btn-warning">Sign Up</button>
+            <a href="{% url 'login' %}" class="ml-2 btn btn-warning">Login</a>
+            <a href="{% url 'register' %}" class="ml-2 btn btn-warning">Sign Up</a>
         </div>
     </nav>
     <div class="bg-white" style="margin-top: 78px;">
