@@ -10,6 +10,7 @@ django = "*"
 django-heroku = "*"
 gunicorn = "*"
 django-crispy-forms = "*"
+mysqlclient = "*"
 
 [requires]
 python_version = "3.8"
