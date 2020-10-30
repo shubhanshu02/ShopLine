@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.shortcuts import reverse
 
+
 class Seller(models.Model):
-    name = models.CharField(default="My Shop", null=False,
-                            max_length=30, blank=False)
+    name = models.CharField(default='My Shop', max_length=30)
     user = models.OneToOneField(
-        User, on_delete=models.CASCADE, primary_key=True, null=False)
+        User, on_delete=models.CASCADE, primary_key=True)
 
     class Meta:
         verbose_name = ("Seller")
@@ -23,13 +23,11 @@ class Seller(models.Model):
 
 
 class Item(models.Model):
-    name = models.CharField(blank=False, null=False,
-                            max_length=40, primary_key=True, unique=True)
-    price = models.PositiveIntegerField(
-        blank=False, null=False, validators=[MinValueValidator(1)])
-    size = models.CharField(default='N.A.', null=False, max_length=20)
-    quantity_available = models.PositiveIntegerField(default=0, null=False)
-    min_quantity = models.PositiveIntegerField(default=0, null=False)
+    name = models.CharField(max_length=40, primary_key=True, unique=True)
+    price = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    size = models.CharField(default='N.A.', max_length=20)
+    quantity_available = models.PositiveIntegerField(default=0)
+    min_quantity = models.PositiveIntegerField(default=0)
     seller = models.ForeignKey(
         Seller, on_delete=models.CASCADE, related_name="seller_items")
 
@@ -44,9 +42,11 @@ class Item(models.Model):
 
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now=True, null=False)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user_notification')
+    item = models.ForeignKey(
+        Item, on_delete=models.CASCADE, related_name='item_notification')
+    date = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = ("Notification")
