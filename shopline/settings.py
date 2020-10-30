@@ -85,6 +85,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+'''
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'itw',
+        'USER': 'username',
+        'PASSWORD': 'Password',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+'''
 
 
 # Password validation
@@ -111,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -124,7 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'/media')
+STATIC_ROOT = os.path.join(BASE_DIR,'/static')
 django_heroku.settings(locals())
 LOGIN_REDIRECT_URL='/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
