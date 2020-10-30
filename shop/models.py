@@ -54,9 +54,6 @@ class Notification(models.Model):
         ordering = ['-date']
         db_table = 'notification'
 
-    def __str__(self):
-        return self.name
-
 
 class BillItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
