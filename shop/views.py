@@ -14,10 +14,9 @@ def notifications(request):
     return render(request, 'shop/notifications.html')
 
 def Item_Available(request):
-    sellers = Seller.objects.filter(user = request.user)
-    print('sellers')
+    #sellers = Seller.objects.filter(user = request.user)
     #for i in range(10):
     #    nam = f'Item {i}'
     #    Item(name = nam, price=  10, size= '500ml',quantity_available= 50,min_quantity=i+10, seller = sel).save()
 
-    return render(request, 'shop/Item_Available.html',{'posts': posts})
+    return render(request, 'shop/Item_Available.html')
