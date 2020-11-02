@@ -47,6 +47,7 @@ class Notification(models.Model):
     item = models.ForeignKey(
         Item, on_delete=models.CASCADE, related_name='item_notification')
     date = models.DateTimeField(auto_now=True)
+    unread = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = ("Notification")
