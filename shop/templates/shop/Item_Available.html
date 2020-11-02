@@ -2,11 +2,13 @@
 {% load static %}
 
 {% block content %}
-    <div class="container pb-3">
-        <h2>Items Available</h2>
-        <p>These are the items available in your shop.</p>            
-        <table class="table table-striped">
-            <thead>
+<div class="container pb-3">
+
+    <h2>Items Available</h2>
+    <p>These are the items available in your shop.</p>
+    {% if items %}
+    <table class="table table-striped">
+        <thead>
             <tr>
                 <th>Product</th>
                 <th>Size</th>
@@ -14,20 +16,21 @@
                 <th>Quantity Available</th>
                 <th>min. Qty.</th>
             </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
-                    <tr>
-                        <td> {{ item.name }} </td>
-                        <td> {{ item.size }} </td>
-                        <td> {{ item.price }} </td>
-                        <td> {{ item.quantity_available }} </td>
-                        <td> {{ item.min_quantity }} </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td> {{ item.name }} </td>
+                <td> {{ item.size }} </td>
+                <td> {{ item.price }} </td>
+                <td> {{ item.quantity_available }} </td>
+                <td> {{ item.min_quantity }} </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>{{ message }}</p>
+    {% endif %}
+</div>
 {% endblock %}
-
-
