@@ -81,20 +81,15 @@ WSGI_APPLICATION = 'shopline.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-'''
-    'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'itw',
-        'USER': 'username',
-        'PASSWORD': 'Password',
+        'NAME': os.environ.get('SQL_DBNAME'),
+        'USER': 'root',
+        'PASSWORD': os.environ.get('SQL_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '3306',
     }
-'''
+}
+
 
 
 # Password validation

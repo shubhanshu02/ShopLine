@@ -57,14 +57,35 @@ class Notification(models.Model):
 
 
 class BillItem(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    price = models.IntegerField()
-    total = models.IntegerField()
+    #item = models.ForeignKey(
+    #   Item, on_delete=models.CASCADE, related_name='bill_item')
+    item = models.CharField(max_length=40)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.PositiveIntegerField(default=0)
+    total = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = ("BillItem")
+        verbose_name_plural = ("BillItems")
+        ordering = ['-price']
+        db_table = 'Bill_Item'
+    
+    def __str__(self):
+        return self.total
 
 
 class Bill(models.Model):
     customer = models.CharField(max_length=100)
-    dateTime = models.DateTimeField()
-    total = models.IntegerField()
+    dateTime = models.DateTimeField(auto_now=True)
+    total = models.PositiveIntegerField(default=0)
     items = models.ManyToManyField(BillItem)
+
+    class Meta:
+        verbose_name = ("Bill")
+        verbose_name_plural = ("Bills")
+        ordering = ['-dateTime']
+        db_table = 'Bill'
+
+    def __str__(self):
+        return self.total
+
