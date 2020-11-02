@@ -17,22 +17,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='BillItem',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('item', models.CharField(max_length=40)),
-                ('quantity', models.PositiveIntegerField(default=1)),
-                ('price', models.PositiveIntegerField(default=0)),
-                ('total', models.PositiveIntegerField(default=0)),
-            ],
-            options={
-                'verbose_name': 'BillItem',
-                'verbose_name_plural': 'BillItems',
-                'db_table': 'Bill_Item',
-                'ordering': ['-price'],
-            },
-        ),
-        migrations.CreateModel(
             name='Item',
             fields=[
                 ('name', models.CharField(max_length=40, primary_key=True, serialize=False, unique=True)),
@@ -81,21 +65,5 @@ class Migration(migrations.Migration):
             model_name='item',
             name='seller',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='seller_items', to='shop.seller'),
-        ),
-        migrations.CreateModel(
-            name='Bill',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('customer', models.CharField(max_length=100)),
-                ('dateTime', models.DateTimeField(auto_now=True)),
-                ('total', models.PositiveIntegerField(default=0)),
-                ('items', models.ManyToManyField(to='shop.BillItem')),
-            ],
-            options={
-                'verbose_name': 'Bill',
-                'verbose_name_plural': 'Bills',
-                'db_table': 'Bill',
-                'ordering': ['-dateTime'],
-            },
         ),
     ]

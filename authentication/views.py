@@ -2,7 +2,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib import auth
-
+from shop.models import Seller
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -12,6 +12,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
+            Seller(user = user).save()
             return redirect('index')
     elif request.user.is_authenticated:
         return redirect('index')
