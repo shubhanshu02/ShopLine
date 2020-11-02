@@ -9,16 +9,10 @@ def home(request):
 
 
 def dashboard(request):
-    return render(request, 'shop/dashboard.html')
-
-
+    items = Item.objects.order_by('name')
+    return render(request, 'shop/Item_Available.html',{'items': items})
+   
 def notifications(request):
-    sel = Seller.objects.filter(user = request.user)[0]
-    for i in range(10):
-        nam = f'Item ${i}'
-        Item(name = nam, price=  10, size= '500ml',quantity_available= 50,min_quantity=i+10, seller = sel).save()
-
-
     if request.user.is_authenticated:
         notifications = Notification.objects.filter(user=request.user)
         if (notifications.count() == 0):
