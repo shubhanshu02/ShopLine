@@ -18,7 +18,10 @@ def stock(request):
     return render(request, 'shop/item_Available.html', {'message': "Please Login to View this Page"})
 
 def dashboard(request):
-    return render(request, 'shop/dashboard_home.html')
+    seller = None
+    if request.user.is_authenticated:
+        seller = Seller.objects.filter(user=request.user)[0]
+    return render(request, 'shop/dashboard_home.html', {'seller':seller })
 
 def bill_generate(request):
     return render(request, 'shop/bill_generation.html')

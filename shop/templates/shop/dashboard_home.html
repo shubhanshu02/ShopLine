@@ -1,6 +1,15 @@
 {% extends 'dashboard.html' %}
 {% load static %}
 
+{% block title %}Dashboard{% endblock %}
+
 {% block dashboard %}
+<div class="container">
+    <h4>{% if seller %}
+        {{seller}}
+        {% endif %}</h4>
+    <hr class="my-4">
+    
+</div>
 HOME OF DASHBOARD
 {% endblock %}
