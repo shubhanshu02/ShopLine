@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 align-self-center">
+                <h1 class="display-4">Seller Dashboard</h1>
+                <p class="lead">Manage Your Shop</p>
+            </div>
+            <div class="col-sm-6 text-center">
+                <img class="img-fluid" style="max-height: 200px;" src="{% static "images/dashboard.svg" %}"
+                    alt="My image">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container pb-3">
+    <div class="row">
+        <div class="col-sm-3 border-right">
+            {% url 'dashboard' as url %}
+            <p class="lead"><a href="{{ url }}" class="{% if request.path == url %}font-weight-normal{% endif %}" style="color: black;">Seller Profile</a></p>
+            {% url 'Available Stock' as url %}
+            <p class="lead"><a href="{{ url }}" class="{% if request.path == url %}font-weight-normal{% endif %}" style="color: black;">Available Stock</a></p>
+            {% url 'Bill Generation' as url %}
+            <p class="lead"><a href="{{ url }}" class="{% if request.path == url %}font-weight-normal{% endif %}" style="color: black;">Bill Generation</a></p>
+            {% url 'Update Stock' as url %}
+            <p class="lead"><a href="{{ url }}" class="{% if request.path == url %}font-weight-normal{% endif %}" style="color: black;">Update Stock</a></p>
+        </div>
+        <div class="col-sm-9">
+            {% block dashboard %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
