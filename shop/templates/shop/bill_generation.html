@@ -39,7 +39,10 @@
 
     <div id="billOutline">
         <hr>
-        <p>Nothing Selected</p>
+        <p>No Item Added</p>
+    </div>
+    <div id="submissionBtn" class="text-right d-none">
+        <button class="btn btn-primary" onclick="">Submit</button>
     </div>
 </div>
 <script>
@@ -51,13 +54,6 @@
         document.getElementById(name).textContent = item.value;
         let count = Number(item.value);
         bill[item.parentElement.id] = count;
-        if (count !== 0) {
-
-            console.log(count);
-        }
-        else if (count === 0) {
-            console.log('REmOVE')
-        }
         reRender();
     }
 
@@ -78,12 +74,13 @@
         let root = document.getElementById('bill');
         if (bill.every(item => item === 0)) {
             document.getElementById('billOutline').innerHTML = `<hr>
-            <p>Nothing Selected</p>`
+            <p>No Item Added</p>`
+            document.getElementById('submissionBtn').classList.add('d-none');
+            return;
         }
         root.textContent = "";
         let total = 0;
         bill.forEach(async function (element, index) {
-            console.log(element);
             total += element * items[index][1];
             if (element !== 0) {
                 root.innerHTML += `
@@ -104,6 +101,7 @@
                 <td>Total</td>
                 <td>Rs ${total}</td>
             </tr>`
+        document.getElementById('submissionBtn').classList.remove('d-none');
     }
 </script>
 {% endblock %}
