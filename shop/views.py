@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from .models import Notification, Seller, Item
 import datetime
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+
 # Create your views here.
 
 
@@ -24,7 +27,19 @@ def dashboard(request):
     return render(request, 'shop/dashboard_home.html', {'seller':seller })
 
 def bill_generate(request):
-    return render(request, 'shop/bill_generation.html')
+    if request.user.is_authenticated:
+        seller = Seller.objects.filter(user=request.user)[0]
+        item = Item.objects.filter(seller=seller)
+        forjs = item.values_list()
+        forjs = json.dumps(list(forjs), cls=DjangoJSONEncoder)
+
+        print(forjs)
+        if item.count() > 0:
+            return render(request, 'shop/bill_generation.html', {'items': item, 'itm':forjs})
+        return render(request, 'shop/bill_generation.html', {'message': "No Product to show"})
+    return render(request, 'shop/bill_generation.html', {'message': "Please Login to View this Page"})
+
+    
 
 def update_stock(request):
     return render(request, 'shop/update_stock.html')

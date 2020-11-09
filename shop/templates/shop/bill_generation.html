@@ -4,5 +4,83 @@
 {% block title %}New Bill{% endblock %}
 
 {% block dashboard %}
-NEW BILL
+<script>
+    items = {{ itm | safe }};
+    console.log(items)
+    bill = [];
+
+    function valueChange(item) {
+        let name = item.id + " amt";
+        document.getElementById(name).textContent = item.value;
+        let count = Number(item.value);
+        if (count !== 0) {
+
+            console.log(count);
+        }
+        else if (count === 0) {
+            console.log('REmOVE')
+        }
+    }
+
+</script>
+<div class="container">
+    <h3 class="text-center">Generate Bill</h3>
+    <p class="lead">Available Items</p>
+
+    <div class="border" style="max-height: 200px; overflow-y: scroll;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Amount Bought</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td> {{ item.name }} </td>
+                    <td> {{ item.size }} </td>
+                    <td> Rs {{ item.price }} </td>
+                    <td>
+                        <input type="range" value="0" id="{{item.name}}" onchange="valueChange(this);" name="points"
+                            min="0" max="{{ item.quantity_available }}">
+                        <output id="{{item.name}} amt">0</output>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p class="lead pt-2">Selected Items</p>
+    <div id="nothing" class="d-none">
+        <hr>
+        <p>Nothing Selected</p>
+    </div>
+    <table id="something" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for item in items %}
+            <tr>
+                <td> {{ item.name }} </td>
+                <td> {{ item.size }} </td>
+                <td> {{ item.price }} </td>
+                <td> 5 </td>
+                <td> 8 </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 {% endblock %}
