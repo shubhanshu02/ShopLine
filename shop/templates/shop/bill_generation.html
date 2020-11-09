@@ -4,28 +4,9 @@
 {% block title %}New Bill{% endblock %}
 
 {% block dashboard %}
-<script>
-    items = {{ itm | safe }};
-    console.log(items)
-    bill = [];
-
-    function valueChange(item) {
-        let name = item.id + " amt";
-        document.getElementById(name).textContent = item.value;
-        let count = Number(item.value);
-        if (count !== 0) {
-
-            console.log(count);
-        }
-        else if (count === 0) {
-            console.log('REmOVE')
-        }
-    }
-
-</script>
 <div class="container">
     <h3 class="text-center">Generate Bill</h3>
-    <p class="lead">Available Items</p>
+    <p class="font-weight-bold lead">Available Items</p>
 
     <div class="border" style="max-height: 200px; overflow-y: scroll;">
         <table class="table">
@@ -43,7 +24,7 @@
                     <td> {{ item.name }} </td>
                     <td> {{ item.size }} </td>
                     <td> Rs {{ item.price }} </td>
-                    <td>
+                    <td id="{{forloop.counter}}">
                         <input type="range" value="0" id="{{item.name}}" onchange="valueChange(this);" name="points"
                             min="0" max="{{ item.quantity_available }}">
                         <output id="{{item.name}} amt">0</output>
@@ -53,12 +34,36 @@
             </tbody>
         </table>
     </div>
-    <p class="lead pt-2">Selected Items</p>
-    <div id="nothing" class="d-none">
+    <p class="font-weight-bold lead pt-2">Selected Items</p>
+
+
+    <div id="billOutline">
         <hr>
         <p>Nothing Selected</p>
     </div>
-    <table id="something" class="table table-striped">
+</div>
+<script>
+    items = {{ itm | safe }};
+    bill = Array(items.length).fill(0);
+
+    function valueChange(item) {
+        let name = item.id + " amt";
+        document.getElementById(name).textContent = item.value;
+        let count = Number(item.value);
+        bill[item.parentElement.id] = count;
+        if (count !== 0) {
+
+            console.log(count);
+        }
+        else if (count === 0) {
+            console.log('REmOVE')
+        }
+        reRender();
+    }
+
+    function reRender() {
+        document.getElementById('billOutline').innerHTML = `
+        <table class="table table-striped">
         <thead>
             <tr>
                 <th>Product</th>
@@ -68,19 +73,37 @@
                 <th>Price</th>
             </tr>
         </thead>
-        <tbody>
-
-            {% for item in items %}
+        <tbody id="bill"></tbody>
+        </table>`;
+        let root = document.getElementById('bill');
+        if (bill.every(item => item === 0)) {
+            document.getElementById('billOutline').innerHTML = `<hr>
+            <p>Nothing Selected</p>`
+        }
+        root.textContent = "";
+        let total = 0;
+        bill.forEach(async function (element, index) {
+            console.log(element);
+            total += element * items[index][1];
+            if (element !== 0) {
+                root.innerHTML += `
+                <tr>
+                    <td>${items[index][0]}</td>
+                    <td>${items[index][2]}</td>
+                    <td>${items[index][1]}</td>
+                    <td>${element}</td>
+                    <td>Rs ${element * items[index][1]}</td>
+                </tr>`
+            }
+        });
+        root.innerHTML += `
             <tr>
-                <td> {{ item.name }} </td>
-                <td> {{ item.size }} </td>
-                <td> {{ item.price }} </td>
-                <td> 5 </td>
-                <td> 8 </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total</td>
+                <td>Rs ${total}</td>
+            </tr>`
+    }
+</script>
 {% endblock %}
