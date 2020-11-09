@@ -4,6 +4,7 @@
 {% block title %}New Bill{% endblock %}
 
 {% block dashboard %}
+
 <div class="container">
     <h3 class="text-center">Generate Bill</h3>
     <p class="font-weight-bold lead">Available Items</p>
@@ -42,7 +43,7 @@
         <p>No Item Added</p>
     </div>
     <div id="submissionBtn" class="text-right d-none">
-        <button class="btn btn-primary" onclick="">Submit</button>
+        <button class="btn btn-primary" onclick="createBill()">Submit</button>
     </div>
 </div>
 <script>
@@ -81,15 +82,17 @@
         root.textContent = "";
         let total = 0;
         bill.forEach(async function (element, index) {
-            total += element * items[index][1];
+
+            total += element * items[index-1][1];
             if (element !== 0) {
+                console.log(index-1)
                 root.innerHTML += `
                 <tr>
-                    <td>${items[index][0]}</td>
-                    <td>${items[index][2]}</td>
-                    <td>${items[index][1]}</td>
+                    <td>${items[index-1][0]}</td>
+                    <td>${items[index-1][2]}</td>
+                    <td>${items[index-1][1]}</td>
                     <td>${element}</td>
-                    <td>Rs ${element * items[index][1]}</td>
+                    <td>Rs ${element * items[index-1][1]}</td>
                 </tr>`
             }
         });
@@ -102,6 +105,31 @@
                 <td>Rs ${total}</td>
             </tr>`
         document.getElementById('submissionBtn').classList.remove('d-none');
+    }
+
+
+
+
+    function createBill(bid) {
+        
+        console.log()
+        $.ajax({
+            url: "{% url 'Bill Generation' %}",
+            method: "POST",
+            data: JSON.stringify({
+                
+                'items': Array(bill),
+            }),
+            success: function (data, status, xhr) {
+                if (data['status'] == "ok") {
+                    console.log("Success")
+                }
+            },
+            error: function (xhr, status, err) {
+                console.log('Failure')
+            }
+
+        })
     }
 </script>
 {% endblock %}
