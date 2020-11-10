@@ -1,0 +1,174 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+{% block title %}New Bill{% endblock %}
+
+{% block dashboard %}
+<div class="container">
+    <h3 class="text-center">Generate Bill</h3>
+    {% if items %}
+    <div class="form-group">
+        <div class="row pt-3">
+            <label class="col-sm-2" for="CustomerName">Name</label>
+            <input class="col-sm-10 form-control" type="text" id="CustomerName" placeholder="Customer Name">
+        </div>
+    </div>
+    <p class="font-weight-bold lead">Available Items</p>
+    <div class="border" style="max-height: 200px; overflow-y: scroll;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Amount Bought</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td> {{ item.name }} </td>
+                    <td> {{ item.size }} </td>
+                    <td> Rs {{ item.price }} </td>
+                    <td id="{{forloop.counter}}">
+                        <input type="range" value="0" id="{{item.name}}" onchange="valueChange(this);" name="points"
+                            min="0" max="{{ item.quantity_available }}">
+                        <output id="{{item.name}} amt">0</output>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p class="font-weight-bold lead pt-3">Selected Items</p>
+    <div id="billOutline">
+        <hr>
+        <p>No Item Added</p>
+    </div>
+    <div id="submissionBtn" class="text-right d-none">
+        <button class="btn btn-primary" onclick="createBill()">Submit</button>
+    </div>
+    {% endif %}
+    {% if message %}
+    <hr>
+    {{message}}
+    {% endif %}
+</div>
+
+<script>
+    {% if itm %}
+    let items = {{ itm | safe }};
+    let bill = Array(items.length).fill(0);
+
+    function valueChange(item) {
+        let name = item.id + " amt";
+        let count = Number(item.value);
+        if (item.value == 0) iziToast.info({
+            title: 'Removed',
+            message: `${item.id} from selection`,
+
+        });
+        document.getElementById(name).textContent = item.value;
+
+        bill[item.parentElement.id - 1] = count;
+        reRender();
+    }
+
+    function reRender() {
+        document.getElementById('billOutline').innerHTML = `
+            <table class="table table-striped border">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody id="bill"></tbody>
+            </table>`;
+        let root = document.getElementById('bill');
+        if (bill.every(item => item === 0)) {
+            document.getElementById('billOutline').innerHTML = `<hr>
+                <p>No Item Added</p>`
+            document.getElementById('submissionBtn').classList.add('d-none');
+            return;
+        }
+        root.textContent = "";
+        let total = 0;
+        bill.forEach(async function (element, index) {
+            total += bill[index] * items[index][1];
+            if (bill[index] !== 0) {
+                root.innerHTML += `
+                    <tr>
+                        <td>${items[index][0]}</td>
+                        <td>${items[index][2]}</td>
+                        <td>${items[index][1]}</td>
+                        <td>${bill[index]}</td>
+                        <td>Rs ${bill[index] * items[index][1]}</td>
+                    </tr>`;
+            }
+        });
+        root.innerHTML += `
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total</td>
+                    <td>Rs ${total}</td>
+                </tr>`;
+        document.getElementById('submissionBtn').classList.remove('d-none');
+    }
+
+    function createBill(bid) {
+        let name = document.getElementById('CustomerName').value.trim();
+        if (name === "") {
+            iziToast.warning({
+                title: 'Warning!',
+                message: 'Customer Name Cannot be left Empty!',
+            });
+        }
+        else {
+            $.ajax({
+                url: "{% url 'Bill Generation' %}",
+                method: "POST",
+                data: JSON.stringify({
+                    'name': name,
+                    'items': Array(bill),
+                }),
+                success: function (data, status, xhr) {
+                    console.log("Success");
+                    if (data['status'] == "Success") {
+                        iziToast.success({
+                            title: 'OK',
+                            message: 'Successfully Generated the Bill!',
+                        });
+                        iziToast.info({
+                            message: 'Redirecting to the Bill!',
+                        });
+                        setTimeout(() => {
+                            // Add Bill Link
+                        }, 2000);
+                        return null;
+                    }
+                    iziToast.error({
+                        title: 'Error',
+                        message: `${data['status']}`,
+                    });
+                },
+                error: function (xhr, status, err) {
+                    console.log('Failure');
+                    iziToast.error({
+                        title: 'Error',
+                        message: `${err}`,
+                    });
+                }
+            });
+        }
+    }
+
+
+    {% endif %}
+</script>
+{% endblock %}
