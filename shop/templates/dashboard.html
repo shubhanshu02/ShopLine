@@ -24,9 +24,6 @@
                 <h4>Navigation</h4>
                 <hr>
             </div>
-            {% url 'dashboard' as url %}
-            <p class="lead"><a href="{{ url }}" class="{% if request.path == url %}font-weight-normal{% endif %}"
-                    style="color: black;">Seller Profile</a></p>
             {% url 'Available Stock' as url %}
             <p class="lead"><a href="{{ url }}" class="{% if request.path == url %}font-weight-normal{% endif %}"
                     style="color: black;">Available Stock</a></p>
@@ -36,6 +33,9 @@
             {% url 'Update Stock' as url %}
             <p class="lead"><a href="{{ url }}" class="{% if request.path == url %}font-weight-normal{% endif %}"
                     style="color: black;">Update Stock</a></p>
+            {% url 'dashboard' as url %}
+            <p class="lead"><a href="{{ url }}" class="{% if request.path == url %}font-weight-normal{% endif %}"
+                    style="color: black;">Seller Profile</a></p>
             <hr class="d-sm-none">
         </div>
         <div class="col-sm-9">

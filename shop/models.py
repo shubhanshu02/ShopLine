@@ -57,7 +57,7 @@ class Notification(models.Model):
 
 
 class BillItem(models.Model):
-    #item = models.ForeignKey(
+    # item = models.ForeignKey(
     #   Item, on_delete=models.CASCADE, related_name='bill_item')
     item = models.CharField(max_length=40)
     quantity = models.PositiveIntegerField(default=1)
@@ -69,9 +69,9 @@ class BillItem(models.Model):
         verbose_name_plural = ("BillItems")
         ordering = ['-price']
         db_table = 'Bill_Item'
-    
+
     def __str__(self):
-        return self.total
+        return self.item
 
 
 class Bill(models.Model):
@@ -79,6 +79,8 @@ class Bill(models.Model):
     dateTime = models.DateTimeField(auto_now=True)
     total = models.PositiveIntegerField(default=0)
     items = models.ManyToManyField(BillItem)
+    seller = models.ForeignKey(
+        Seller, on_delete=models.CASCADE, related_name="bill_seller", default=None)
 
     class Meta:
         verbose_name = ("Bill")
@@ -87,5 +89,4 @@ class Bill(models.Model):
         db_table = 'Bill'
 
     def __str__(self):
-        return self.total
-
+        return self.customer

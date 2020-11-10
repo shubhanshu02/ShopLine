@@ -1,9 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from .models import Notification, Seller, Item, BillItem
+from .models import Notification, Seller, Item, BillItem, Bill
 import datetime
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.core.serializers.json import DjangoJSONEncoder
+from django.utils.timezone import now
+from django.http import HttpResponse
+from django.utils import datetime_safe
 # Create your views here.
 
 
@@ -31,31 +35,55 @@ def dashboard(request):
 @csrf_exempt
 def bill_generate(request):
     if request.user.is_authenticated:
-        seller = Seller.objects.filter(user=request.user)[0]
-        item = Item.objects.filter(seller=seller)
+        current_seller = Seller.objects.get(user=request.user)
+        item_query = Item.objects.filter(seller=current_seller)
+
         if request.method == 'GET':
-            forjs = item.values_list()
-            forjs = json.dumps(list(forjs), cls=DjangoJSONEncoder)
-            print(forjs)
-            if item.count() > 0:
-                return render(request, 'shop/bill_generation.html', {'items': item, 'itm': forjs})
-            return render(request, 'shop/bill_generation.html', {'message': "No Product to show"})
+            items_json = item_query.values_list()
+            items_json = json.dumps(list(items_json), cls=DjangoJSONEncoder)
+            if item_query.count() > 0:
+                return render(request, 'shop/bill_generation.html', {'items': item_query, 'itm': items_json})
+            return render(request, 'shop/bill_generation.html', {'message': "No Products to show"})
 
         elif request.method == 'POST':
-            item = list(item)
-            data = json.loads(request.body)
-            amt_list = data['items'][0]
-            print('\n\n\n\n\n\n', amt_list, '\n\n\n')
+            item_query = list(item_query)
             billItems = []
-            for i in range(len(amt_list)):
-                if amt_list[i] != 0:
-                    print('\t\t', item[i-1].pk)
-                    t = BillItem(item=item[i-1].pk, price=item[i-1].price,
-                                 quantity=amt_list[i-1], total=amt_list[i-1]*item[i-1].price)
-                    billItems.append(t)
-            # Add Bill Object and save bill items
-            return JsonResponse({'status': 'ok'})
+            billTotal = 0
 
+            try:
+                # Data from the Request
+                data = json.loads(request.body)
+                name = data['name']
+                request_items = data['items'][0] # Expected: Array
+                # Fill the array with Bill Items
+                for i in range(len(request_items)):
+                    # Array item contains the number of 
+                    if request_items[i] != 0:
+                        item_total = request_items[i] * item_query[i].price
+                        billTotal += item_total
+                        currentItem = None
+
+                        # To avoid duplicates, use the same BillItem if already exists
+                        item_search = BillItem.objects.filter(item=item_query[i], price=item_query[i].price, 
+                                    quantity=request_items[i], total=request_items[i] * item_query[i].price)
+                        if item_search.count() != 0:
+                            currentItem = item_search[0]
+                        else:
+                            currentItem = BillItem(item=item_query[i], price=item_query[i].price,
+                            quantity=request_items[i], total=request_items[i] * item_query[i].price)
+                        # Add to the list
+                        billItems.append(currentItem)
+                        currentItem.save()
+
+                # Generate Bill and add BillItems from the list
+                current_bill = Bill(seller=current_seller, total=billTotal, customer=name, dateTime=now())
+                current_bill.save()
+                current_bill.items.add(*billItems)
+                return JsonResponse({'status': 'Success'})
+            except:
+                return JsonResponse({'status': 'Server Error'})
+        else:
+            JsonResponse('Bad Request')
     return render(request, 'shop/bill_generation.html', {'message': "Please Login to View this Page"})
 
 
