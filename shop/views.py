@@ -30,7 +30,9 @@ def stock(request):
 @login_required
 def dashboard(request):
     seller = Seller.objects.filter(user=request.user)[0]
-    return render(request, 'shop/dashboard_home.html', {'seller': seller})
+    old_bills = Bill.objects.filter(seller=seller)
+    return render(request, 'shop/dashboard_home.html', {'seller': seller,'old_bills':old_bills})
+
 
 
 @csrf_exempt
