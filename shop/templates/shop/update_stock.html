@@ -4,99 +4,218 @@
 {% block title %}Update Stock{% endblock %}
 
 {% block dashboard %}
-    <div class="container pb-3">
+<div class="container pb-3">
 
-        <h2>Items Available</h2>
-        <p>These are the items available in your shop.</p>
-        {% if items %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Size</th>
-                    <th>Price</th>
-                    <th>Quantity Available</th>
-                    <th>min. Qty.</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
-                <tr id="item{{ forloop.counter }} " >
-                    <td> {{ item.name }} </td>
-                    <td> {{ item.size }} </td>
-                    <td> {{ item.price }} </td>
-                    <td> {{ item.quantity_available }} </td>
-                    <td> {{ item.min_quantity }} </td>
-                    <td> <button id="{{forloop.counter}}" type="button" class="btn btn-info" onClick="reply_click(this.id)">Update</button> </td>
-                </tr>
-                {% endfor %}
-
-                    
-            </tbody>
-        </table>
-        {% else %}
-        <p>{{ message }}</p>
-        {% endif %}
+    <h2>Items Available</h2>
+    <div class="row pb-2">
+        <div class="col-sm-8">
+            <p>These are the items available in your shop.</p>
+        </div>
+        <div class="col-sm-4 text-right"><button class="btn btn-primary" onclick="$('#newItem').modal();">New
+                Item</button>
+        </div>
     </div>
+    {% if items %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Price</th>
+                <th>Quantity Available</th>
+                <th>min. Qty.</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr id="{{ item.name }}">
+                <td> {{ item.name }} </td>
+                <td id="{{ item.name }} size"> {{ item.size }} </td>
+                <td id="{{ item.name }} price"> {{ item.price }} </td>
+                <td id="{{ item.name }} quantity">{{ item.quantity_available }} </td>
+                <td id="{{ item.name }} min"> {{ item.min_quantity }} </td>
+                <td> <button id="{{forloop.counter  }}" type="button" class="btn btn-info"
+                        onClick="showModal(this.id)">Update</button> </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>{{ message }}</p>
+    {% endif %}
+</div>
+<div id="updateModal" class="modal" role="dialog"></div>
+<div id="newItem" class="modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">New Item</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="newName">Product's Name</label>
+                        <input type="text" id="newName" class="form-control" placeholder="Name">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="newSize">Size</label>
+                            <input type="text" id="newSize" class="form-control" placeholder="Size" placeholder="Size">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="newPrice">Price (INR)</label>
+                            <input type="number" id="newPrice" min="0" class="form-control" placeholder="Price"
+                                value="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="newQuantity">Quantity</label>
+                            <input type="number" min="0" id="newQuantity" class="form-control" placeholder="Quantity"
+                                value="0">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="newMin">Minimum Quantity</label>
+                            <input type="number" min="0" id="newMin" class="form-control" value="0"
+                                placeholder="Minimum Quantity">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onClick="newItem();" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    {% for item in items %}
-        <div class="modal" id="exampleModalCenter{{ forloop.counter }}" role="dialog">
+<script>
+    let items = {{ itm | safe }};
+    function showModal(id) {
+        id = Number(id) - 1;
+        document.getElementById('updateModal').innerHTML = `
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLongTitle">Update</h5>
+                        <h3 class="modal-title">Update Stock</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <form>
-                        <div class="form-group">
-                            <label for="Name">Product's Name</label>
-                            <input type="text" class="form-control" id="Name" placeholder="Product's Name" value="{{item.name}}" >
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="Size">Size</label>
-                                <input type="text" class="form-control" id="Size" placeholder="Size" value="{{item.size}}">
+                            <div class="form-group">
+                                <label for="Name">Product's Name</label>
+                                <input type="text" id="name" class="form-control" disabled value="${items[id][0]}">
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="Price">Price</label>
-                                <input type="number" class="form-control" id="Price" placeholder="Price" value="{{item.price}}">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="Size">Size</label>
+                                    <input type="text" id="size" class="form-control" placeholder="Size" value="${items[id][2]}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="Price">Price</label>
+                                    <input type="number" id="price" min="0" class="form-control" placeholder="Price" value="${items[id][1]}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="Quantity">Quantity</label>
-                                <input type="text" class="form-control" id="Quantity" placeholder="Quantity" value="{{item.quantity_available}}">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="Quantity">Quantity</label>
+                                    <input type="number" min="0" id="quantity" class="form-control" placeholder="Quantity" value="${items[id][3]}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="min-Quantity">Minimum Quantity</label>
+                                    <input type="number" min="0" id="min" class="form-control" placeholder="Minimum Quantity" value="${items[id][4]}">
+                                </div>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="min-Quantity">Minimum Quantity</label>
-                                <input type="text" class="form-control" id="min-qty." placeholder="Minimum Quantity" value="{{item.min_quantity}}">
-                            </div>
-                        </div>
                         </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                    <div class="modal-footer">                        
+                        <button type="button" onClick="submitForm();" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
-            </div>                       
-        </div>
-    {% endfor %}
+            </div>
+        `;
+        $('#updateModal').modal()
+    }
+    function submitForm() {
+        var req_data = {
+            name: `${document.getElementById('name').value}`,
+            size: `${document.getElementById('size').value}`,
+            price: Number(document.getElementById('price').value),
+            quantity: Number(document.getElementById('quantity').value),
+            min: Number(document.getElementById('min').value),
+        }
 
-
-    <script>
-        var dialog = document.getElementById("exampleModalCenter"); 
-        function reply_click(clicked_id)
-            {
-                
-                    
-                $('#exampleModalCenter'+clicked_id).modal(); 
+        $.ajax({
+            url: "{% url 'Update Stock' %}",
+            method: "POST",
+            data: req_data,
+            success: function (data, status, xhr) {
+                if (data['status'] == "Success") {
+                    iziToast.success({
+                        title: 'OK',
+                        message: 'Successfully Updated the item!',
+                    })
+                    return setTimeout(() => window.location.reload(), 1000);
+                }
+                iziToast.error({
+                    title: 'Error',
+                    message: `${data['status']}`,
+                });
+            },
+            error: function (xhr, status, err) {
+                iziToast.error({
+                    title: 'Error',
+                    message: `${err}`,
+                });
             }
+        });
+    }
 
+    function newItem() {
+        if (document.getElementById('newName').value === "") return iziToast.warning({
+            title: 'Caution',
+            message: 'Name cannot be Left Empty',
+        });
+        else if (document.getElementById('newSize').value === "") return iziToast.warning({
+            title: 'Caution',
+            message: 'Size cannot be Left Empty',
+        });
+        var req_data = {
+            name: `${document.getElementById('newName').value}`,
+            size: `${document.getElementById('newSize').value}`,
+            price: Number(document.getElementById('newPrice').value),
+            quantity: Number(document.getElementById('newQuantity').value),
+            min: Number(document.getElementById('newMin').value),
+        };
+        $.ajax({
+            url: "{% url 'New Item' %}",
+            method: "POST",
+            data: req_data,
+            success: function (data, status, xhr) {
+                if (data['status'] == "Success") {
+                    iziToast.success({
+                        title: 'OK',
+                        message: 'Successfully Added New Item!',
+                    })
+                    return setTimeout(() => window.location.reload(), 1000);
+                }
+                iziToast.error({
+                    title: 'Error',
+                    message: `${data['status']}`,
+                });
+            },
+            error: function (xhr, status, err) {
+                iziToast.error({
+                    title: 'Error',
+                    message: `${err}`,
+                });
+            }
+        });
+    }
 
-    </script>
+</script>
 {% endblock %}
-
-
-
-

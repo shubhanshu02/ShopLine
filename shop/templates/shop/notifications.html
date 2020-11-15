@@ -5,20 +5,22 @@
 
 {% block content %}
 <div class="container pb-3">
-    <h2>Notifications</h2>
-    <hr>
+    <h2 class="pb-3">Notifications</h2>
+
     <div class="col">
         {% if noti %}
-        {% for not in noti %}
-        <div class="row rounded" style="border: 1px solid black; margin: 5px;">
-            <div class="col-9">
-                The stock for <b>{{ not.item }}</b> in your shop is below the minimum availability you set for {{ not.item }}
-            </div>
-            <div class="col-3">
-                {{ not.date }}
-            </div>
-        </div>
-        {% endfor %}
+        <table class="table">
+            <tbody>
+                {% for not in noti %}
+                <tr>
+                    <td>The stock for <b>{{ not.item }}</b> in your shop is below the minimum availability you set for
+                        {{ not.item }}</td>
+
+                    <td>{{ not.date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         {% endif %}
         {% if message %}
         {{message}}
