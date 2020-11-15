@@ -31,6 +31,10 @@
         {{ form |crispy }}
         <button type="submit" class="btn btn-primary">Sign up</button>
       </form>
+      <div class="row pt-1">
+        <span class="pl-3 font-weight-light">Already a member?&nbsp;</span> <span><a class="text-weight-bold"
+            href="{% url 'login' %}">Login Here</a></span>
+      </div>
     </div>
   </div>
 </div>
