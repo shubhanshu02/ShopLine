@@ -4,5 +4,99 @@
 {% block title %}Update Stock{% endblock %}
 
 {% block dashboard %}
-UPDATE STOCK
+    <div class="container pb-3">
+
+        <h2>Items Available</h2>
+        <p>These are the items available in your shop.</p>
+        {% if items %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Quantity Available</th>
+                    <th>min. Qty.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr id="item{{ forloop.counter }} " >
+                    <td> {{ item.name }} </td>
+                    <td> {{ item.size }} </td>
+                    <td> {{ item.price }} </td>
+                    <td> {{ item.quantity_available }} </td>
+                    <td> {{ item.min_quantity }} </td>
+                    <td> <button id="{{forloop.counter}}" type="button" class="btn btn-info" onClick="reply_click(this.id)">Update</button> </td>
+                </tr>
+                {% endfor %}
+
+                    
+            </tbody>
+        </table>
+        {% else %}
+        <p>{{ message }}</p>
+        {% endif %}
+    </div>
+
+    {% for item in items %}
+        <div class="modal" id="exampleModalCenter{{ forloop.counter }}" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="exampleModalLongTitle">Update</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                        <div class="form-group">
+                            <label for="Name">Product's Name</label>
+                            <input type="text" class="form-control" id="Name" placeholder="Product's Name" value="{{item.name}}" >
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="Size">Size</label>
+                                <input type="text" class="form-control" id="Size" placeholder="Size" value="{{item.size}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="Price">Price</label>
+                                <input type="number" class="form-control" id="Price" placeholder="Price" value="{{item.price}}">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="Quantity">Quantity</label>
+                                <input type="text" class="form-control" id="Quantity" placeholder="Quantity" value="{{item.quantity_available}}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="min-Quantity">Minimum Quantity</label>
+                                <input type="text" class="form-control" id="min-qty." placeholder="Minimum Quantity" value="{{item.min_quantity}}">
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>                       
+        </div>
+    {% endfor %}
+
+
+    <script>
+        var dialog = document.getElementById("exampleModalCenter"); 
+        function reply_click(clicked_id)
+            {
+                
+                    
+                $('#exampleModalCenter'+clicked_id).modal(); 
+            }
+
+
+    </script>
 {% endblock %}
+
+
+
+

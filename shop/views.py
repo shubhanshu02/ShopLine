@@ -27,9 +27,11 @@ def stock(request):
 
 def dashboard(request):
     seller = None
+    old_bills = None
     if request.user.is_authenticated:
         seller = Seller.objects.filter(user=request.user)[0]
-    return render(request, 'shop/dashboard_home.html', {'seller': seller})
+        old_bills = Bill.objects.filter(seller=seller)
+    return render(request, 'shop/dashboard_home.html', {'seller': seller,'old_bills':old_bills})
 
 
 @csrf_exempt
@@ -88,7 +90,13 @@ def bill_generate(request):
 
 
 def update_stock(request):
-    return render(request, 'shop/update_stock.html')
+    if request.user.is_authenticated:
+        seller = Seller.objects.filter(user=request.user)[0]
+        item = Item.objects.filter(seller=seller)
+        if item.count() > 0:
+            return render(request, 'shop/update_stock.html', {'items': item})
+        return render(request, 'shop/update_stock.html', {'message': "No Product to show"})
+    return render(request, 'shop/update_stock.html', {'message': "Please Login to View this Page"})
 
 
 def notifications(request):

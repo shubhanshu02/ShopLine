@@ -9,7 +9,7 @@
     <h2>Items Available</h2>
     <p>These are the items available in your shop.</p>
     {% if items %}
-    <table class="table table-striped">
+    <table class="table table-striped border">
         <thead>
             <tr>
                 <th>Product</th>
@@ -31,16 +31,6 @@
             {% endfor %}
         </tbody>
     </table>
-    {% for item in items %}
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                
-                <h5 class="card-title">{{ item.name }}</h5>
-                <p class="card-text">{{ item.size }}</p>
-                
-            </div>
-        </div>
-    {% endfor %}
     {% else %}
     <p>{{ message }}</p>
     {% endif %}

@@ -1,12 +1,103 @@
 {% extends 'dashboard.html' %}
 {% load static %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block dashboard %}
-<div class="container">
-    <h4>{% if seller %}{{seller}}{% endif %}</h4>
-    HOME OF DASHBOARD
-</div>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Fondamento&display=swap" rel="stylesheet">
+<div>
+    <div class="container pb-3 text-center">
+        <h1>My Profile</h1>
+        <br />
+        <img src="{% static "\images\seller.jpg" %}" class="rounded-circle" width="200" alt="My image">
+        <h3 class="text-primary font-weight-bold" style="font-family: 'Fondamento', cursive;">{{ seller.name }}</h3>
+    </div>
+    <div class="row lead justify-content-center pt-2">
+        <p class="pl-3">Username:&nbsp;</p>
+        <p class="font-weight-bold">{{ seller.user.username }}</p>
+    </div>
+    <h3 style="font-family: 'Fondamento', cursive;">Old Bills</h3>
+    {% if old_bills %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Bill Id</th>
+                <th>Customer Name</th>
+                <th>Time</th>
+                <th>Total Amount</th>
+                <th>Show the bill</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bill in old_bills %}
+            <tr id="bill{{ forloop.counter }}">
+                <td> {{ bill.id}} </td>
+                <td> {{ bill.customer }} </td>
+                <td> {{ bill.dateTime}} </td>
+                <td> {{ bill.total }} </td>
+                <td> <button id="view{{forloop.counter}}" type="button" class="btn btn-info"
+                        onClick="reply_click2(this.id)">View</button> </td>
+            </tr>
+            {% endfor %}
 
+
+        </tbody>
+    </table>
+    {% else %}
+    <p>{{ message }}</p>
+    {% endif %}
+</div>>
+{% for bill in old_bills %}
+<div class="modal" id="oldBillview{{ forloop.counter }}" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Bill No. {{forloop.counter}}</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row lead">
+                    <p class="pl-3">Customer Name:&nbsp;</p>
+                    <p class="font-weight-bold">{{ bill.customer }}</p>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for it in bill.items.all %}
+                        <tr id="bill{{ forloop.counter }}">
+                            <td> {{ it.item }} </td>
+                            <td> {{ it.price}} </td>
+                            <td> {{ it.quantity }} </td>
+                            <td> {{ it.total }} </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td> </td>
+                            <td>  </td>
+                            <td> Amount Paid: </td>
+                            <td class="font-weight-bold"> {{ bill.total }} </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+
+<script>
+    function reply_click2(clicked_id) {
+        $('#oldBill' + clicked_id).modal();
+    }
+</script>
 {% endblock %}
