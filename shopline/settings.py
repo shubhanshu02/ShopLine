@@ -82,9 +82,9 @@ WSGI_APPLICATION = 'shopline.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'shopline_database',
+        'NAME': os.environ.get('SQL_DBNAME'),
         'USER': 'root',
-        'PASSWORD': 'Sonty@2000',
+        'PASSWORD': os.environ.get('SQL_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '3306',
     }

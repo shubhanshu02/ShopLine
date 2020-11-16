@@ -94,7 +94,9 @@
 </div>
 
 <script>
+    {% if itm %}
     let items = {{ itm | safe }};
+    {% endif %}
     function showModal(id) {
         id = Number(id) - 1;
         document.getElementById('updateModal').innerHTML = `
