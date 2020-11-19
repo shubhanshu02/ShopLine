@@ -31,8 +31,7 @@ def stock(request):
 def dashboard(request):
     seller = Seller.objects.filter(user=request.user)[0]
     old_bills = Bill.objects.filter(seller=seller)
-    return render(request, 'shop/dashboard_home.html', {'seller': seller,'old_bills':old_bills})
-
+    return render(request, 'shop/dashboard_home.html', {'seller': seller, 'old_bills': old_bills})
 
 
 @csrf_exempt
@@ -148,4 +147,19 @@ def newItem(request):
         item.save()
     except IntegrityError:
         return JsonResponse({'status': "An Item with Same Name Already Exists"})
+    return JsonResponse({'status': 'Success'})
+
+
+@csrf_exempt
+@require_POST
+def deleteItem(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 'Bad Request'})
+    try:
+        current_seller = Seller.objects.get(user=request.user)
+        name = request.POST.get('name')
+        item = Item.objects.get(name=name)
+        item.delete()
+    except Exception as exc:
+        return JsonResponse({'status': str(exc)})
     return JsonResponse({'status': 'Success'})

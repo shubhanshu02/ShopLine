@@ -8,5 +8,6 @@ urlpatterns = [
     path('dashboard/bill', views.bill_generate, name='Bill Generation'),
     path('dashboard/update', views.update_stock, name='Update Stock'),
     path('notifications', views.notifications, name='notifications'),
-    path('dashboard/add',views.newItem,name="New Item")
+    path('dashboard/add', views.newItem, name="New Item"),
+    path('dashboard/delete', views.deleteItem, name="Delete Item"),
 ]
