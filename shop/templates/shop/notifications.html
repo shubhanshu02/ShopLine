@@ -4,10 +4,22 @@
 {% block title %}Notifications{% endblock %}
 
 {% block content %}
-<div class="container pb-3">
-    <h2 class="pb-3">Notifications</h2>
-
-    <div class="col">
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 align-self-center">
+                <h1 class="display-4">Notifications</h1>
+            </div>
+            <div class="col-sm-6 text-center">
+                <img class="img-fluid" style="max-height: 200px;" src="{% static "images/notifications.svg" %}"
+                    alt="My image">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <p>Below are the generated notifications for your item stock</p>
+    <div class="col pb-1 pt-1">
         {% if noti %}
         <table class="table">
             <tbody>

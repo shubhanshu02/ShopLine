@@ -32,7 +32,8 @@
                     <td> Rs {{ item.price }} </td>
                     <td id="{{forloop.counter}}">
                         <input type="range" value="0" id="{{item.name}}" onchange="valueChange(this);" name="points"
-                            min="0" max="{{ item.quantity_available }}">
+                            {% if item.quantity_available == 0 %} disabled {% endif %} min="0"
+                            max="{{ item.quantity_available }}">
                         <output id="{{item.name}} amt">0</output>
                     </td>
                 </tr>
@@ -148,7 +149,7 @@
                             message: 'Redirecting to the Bill!',
                         });
                         setTimeout(() => {
-                            // Add Bill Link
+                            window.location.replace('{% url 'dashboard' %}');
                         }, 2000);
                         return null;
                     }

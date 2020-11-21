@@ -70,9 +70,13 @@ def bill_generate(request):
                         currentItem = BillItem(item=item_query[i], price=item_query[i].price,
                                                quantity=request_items[i], total=request_items[i] * item_query[i].price)
                     item_query[i].quantity_available -= request_items[i]
-                    item_query[i].save()
+                    # Generate notification if quantity becomes less
+                    if item_query[i].quantity_available < item_query[i].min_quantity:
+                        Notification(user=current_seller,
+                                     item=item_query[i], date=now()).save()
                     # Add to the list
                     billItems.append(currentItem)
+                    item_query[i].save()
                     currentItem.save()
             # Generate Bill and add BillItems from the list
             current_bill = Bill(
@@ -123,7 +127,8 @@ def update_stock(request):
 
 @login_required
 def notifications(request):
-    notifications = Notification.objects.filter(user=request.user)
+    seller = Seller.objects.get(user=request.user)
+    notifications = Notification.objects.filter(user=seller)
     if (notifications.count() > 0):
         return render(request, 'shop/notifications.html', {'noti': notifications})
     return render(request, 'shop/notifications.html', {'message': "Nothing to Show"})
