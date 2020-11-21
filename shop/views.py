@@ -69,6 +69,8 @@ def bill_generate(request):
                     else:
                         currentItem = BillItem(item=item_query[i], price=item_query[i].price,
                                                quantity=request_items[i], total=request_items[i] * item_query[i].price)
+                    item_query[i].quantity_available -= request_items[i]
+                    item_query[i].save()
                     # Add to the list
                     billItems.append(currentItem)
                     currentItem.save()

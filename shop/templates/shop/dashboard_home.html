@@ -40,14 +40,14 @@
                         onClick="reply_click2(this.id)">View</button> </td>
             </tr>
             {% endfor %}
-
-
         </tbody>
     </table>
     {% else %}
+    <hr>
+    <p class="text-center">No Bills To Show</p>
     <p>{{ message }}</p>
     {% endif %}
-</div>>
+</div>
 {% for bill in old_bills %}
 <div class="modal" id="oldBillview{{ forloop.counter }}" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
