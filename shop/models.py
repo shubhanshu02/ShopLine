@@ -43,7 +43,7 @@ class Item(models.Model):
 
 class Notification(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='user_notification')
+        Seller, on_delete=models.CASCADE, related_name='user_notification')
     item = models.ForeignKey(
         Item, on_delete=models.CASCADE, related_name='item_notification')
     date = models.DateTimeField(auto_now=True)
