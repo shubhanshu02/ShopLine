@@ -23,7 +23,7 @@ class Seller(models.Model):
 
 
 class Item(models.Model):
-    name = models.CharField(max_length=40,default="")
+    name = models.CharField(max_length=40, primary_key=True, unique=True)
     price = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     size = models.CharField(default='N.A.', max_length=20)
     quantity_available = models.PositiveIntegerField(default=0)
@@ -36,7 +36,6 @@ class Item(models.Model):
         verbose_name_plural = ("Items")
         ordering = ['name', 'price']
         db_table = 'item'
-        unique_together = ['name', 'seller']
 
     def __str__(self):
         return self.name
