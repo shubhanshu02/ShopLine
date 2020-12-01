@@ -2,6 +2,11 @@
 
 The Modern e-commerce For Small-Scale Businesses
 
+### Update (As on 24th December 2020)
+
+This project was presented on 24th December 2020 at 2:15 pm. The presentation can be found at this [link](https://www.canva.com/design/DAEOCZR5Fp0/8ZWqMjpepjejJgCOFVVT0g/view?utm_content=DAEOCZR5Fp0&utm_campaign=designshare&utm_medium=link&utm_source=sharebutton) and the website can be used using this [link](https://shopline-web.herokuapp.com/).
+To report any issues, create an issue on this repository giving details of the problem.
+
 ### Setup Instructions
 
 1. Add the `.env` file for the project to the root folder.
